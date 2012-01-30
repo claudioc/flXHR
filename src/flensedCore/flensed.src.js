@@ -174,16 +174,18 @@
 			ieVer = 0,
 			windows = p ? /win/.test(p) : /win/.test(u),
 			mac = p ? /mac/.test(p) : /mac/.test(u);
-		/*@cc_on
-			ie = JSTRUE;
-			try { ieVer = PARSEINT(u.match(/msie (\d+)/)[1],10); } catch (err2) { }
-			@if (@_win32)
-				windows = JSTRUE;
-			@elif (@_mac)
-				mac = JSTRUE;
-			@end
-		@*/
-		return { w3cdom:w3cdom, pv:playerVersion, webkit:webkit, ie:ie, ieVer:ieVer, win:windows, mac:mac };
+
+			// We can't use this is UglifyJS https://github.com/mishoo/UglifyJS/issues/307
+			// feature detection based on Andrea Giammarchi's solution: http://webreflection.blogspot.com/2009/01/32-bytes-to-know-if-your-browser-is-ie.html
+			// ie = !+"\v1"; 
+			// Sponsorpay: this is the jQuery RegExp for IE
+			ie = /(msie) ([\w.]+)/.test(u);
+
+      		try { ieVer = PARSEINT(u.match(/msie (\d+)/)[1],10); } catch (err2) { }
+
+			return { w3cdom:w3cdom, pv:playerVersion, webkit:webkit, ie:ie, ieVer:ieVer, win:windows, mac:mac };
 	}();
 
 })(window);
+
+flensed.base_path = window.location.protocol + '//iframe.sponsorpay.com/javascripts/widget/v2/';
